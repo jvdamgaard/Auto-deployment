@@ -1,0 +1,4 @@
+2012.09.11@00:16:52 - NOTE - Deploy started
+2012.09.11@00:16:52 - ERROR - Commits data is empty (no commits?)
+2012.09.11@00:19:24 - NOTE - Deploy started
+2012.09.11@00:19:24 - ERROR - Commits data is empty (no commits?)
