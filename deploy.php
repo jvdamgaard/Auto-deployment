@@ -60,14 +60,21 @@ class GitHubAutoDeployment {
      *  List of files you want to exclude from a deploy
      *  This path should be relative to a GH_UPLOAD_PATH, without facing and trailing slashes
      */
-    public $ex_files = array('*.gitattributes','*.gitignore','*.md');
+    public $ex_files = array(
+							'*.gitattributes',
+							'*.gitignore',
+							'*.md',
+							'*.less'
+						);
 
     /**
      *  List of folders you want to exclude from a deploy
      *  All files in that folders will be ignored and not deployed too
      *  This path should be relative to a GH_UPLOAD_PATH, without facing and trailing slashes
      */
-    public $ex_dirs  = array();
+    public $ex_dirs  = array(
+    						'less'
+    					);
 
     /**
      *  Now time for a deploy - get the POST data
@@ -155,7 +162,40 @@ class GitHubAutoDeployment {
      *      If returned true - omit.
      */
     protected function excludeFile($file){
-        //return (in_array($file, $this->ex_files) || in_array(dirname($file), $this->ex_dirs));
+
+		$file_info = pathinfo($file);
+
+		// check file
+		foreach ($this->ex_files as $ex_file) {
+			
+			// file type
+			if (strpos('*.', $ex_file, 0) === 0) {
+				$extension = substr($ex_file,2);
+				if ($extension == $file_info['extension']) {
+					return true;
+				}
+						
+			// file	
+			} elseif (strpos('*', $ex_file, 0) === 0) {
+				$filename = substr($ex_file,1);
+				if ($filename == $file_info['filename']) {
+					return true;
+				}
+			
+			// file with path
+			} elseif ($file == $ex_file) {
+				return true;
+			}
+		}
+		
+		// check dir
+		foreach ($this->ex_dirs as $ex_dir) {
+			if (strpos($ex_dir, $file_info['dirname'], 0) === 0) {
+				return true;
+			}
+		}
+
+		return false;
     }
 
     /**
