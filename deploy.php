@@ -155,7 +155,7 @@ class GitHubAutoDeployment {
      *      If returned true - omit.
      */
     protected function excludeFile($file){
-        return (in_array($file, $this->ex_files) || in_array(dirname($file), $this->ex_dirs));
+        //return (in_array($file, $this->ex_files) || in_array(dirname($file), $this->ex_dirs));
     }
 
     /**
