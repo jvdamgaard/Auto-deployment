@@ -9,7 +9,7 @@
 
 // Prevent some childish-hackish things
 if(!isset($_POST['payload']) || empty($_POST['payload'])) {
-    GAD::log('error', 'No payload content', true);
+    GitHubAutoDeployment::log('error', 'No payload content', true);
 }
 
 /**
@@ -21,10 +21,6 @@ if (!defined('GH_USERNAME'))
 // Slug of the epo you want to autodeploy
 if (!defined('GH_REPO'))
     define('GH_REPO', 'm.adaptivedesignstudio.com');
-//Type of the repository. Possible values: public|private
-// Currenty supporting only public
-if (!defined('GH_REPO_TYPE'))
-    define('GH_REPO_TYPE', 'public');
 // What branch should we take care of? Only one can be used
 if (!defined('GH_BRANCH'))
     define('GH_BRANCH', 'master');
@@ -35,7 +31,7 @@ if (!defined('GH_UPLOAD_PATH'))
 /**
  *  Main class itself where all the magic happens
  */
-class GAD{
+class GitHubAutoDeployment {
     // where to save all deploy results
     const LOG_FILE = './log.txt';
 
@@ -69,89 +65,87 @@ class GAD{
      *  Now time for a deploy - get the POST data
      */
     function __construct($payload){
-        // currently we can process only public repositories. Private will die.
-        if (GH_REPO_TYPE !== 'public') {
-            GAD::log('error', 'Repo is private', true);
-        }
 
         // check that we have rights to deploy - IP check
         if (!in_array($_SERVER['REMOTE_ADDR'], $this->ips)) {
-            GAD::log('error', 'Attempt to make a deploy from a not allowed IP: ' . $_SERVER['REMOTE_ADDR'], true);
+            GitHubAutoDeployment::log('error', 'Attempt to make a deploy from a not allowed IP: ' . $_SERVER['REMOTE_ADDR'], true);
         }
 
-        GAD::log('note', 'Deploy started');
-
         // We received json object - decode it
-        $this->data = json_decode($payload);
+        $this->data = json_decode(stripslashes($payload));
+
+        // different branch
+        if($this->data->ref !== 'refs/heads/'.GH_BRANCH) {
+            die;
+        }
 
         // if commit data is empty - exit
         if(empty($this->data->commits) || !is_array($this->data->commits)) {
-            GAD::log('error', 'Commits data is empty (no commits?)', true);
+            GitHubAutoDeployment::log('error', 'Commits data is empty (no commits?)', true);
         }
-
-        // create list of files to process
-        $this->files = $this->get_files();
 
         // the main deploy itself
         $this->deploy();
-
-        GAD::log('note', 'Deploy finished');
     }
 
     /**
-     *  Get the files that are needed to be uploaded
+     *  Actually the deploy is done below
      */
-    protected function get_files(){
-        $added = $removed = $modified = array();
-        $save  = new Stdclass;
+    protected function deploy(){
+
+        $errors = false;
 
         // get the list of all files we need to upload
         foreach($this->data->commits as $commit){
-            $added    = array_merge($added, $commit->added);
-            $modified = array_merge($modified, $commit->modified);
-            $removed  = array_merge($removed, $commit->removed);
+            $add    = array_merge($commit->added,$commit->modified);
+
+            foreach($add as $filename) {
+                if (!addFile($filename)) {
+                    GitHubAutoDeployment::log('error', 'Error while trying to upload this file: ' . $filename);
+                    $errors = true;
+                }
+            }
+
+            foreach($commit->removed as $filename) {
+                if (!removeFile($filename)) {
+                    GitHubAutoDeployment::log('error', 'Error while trying to remove this file: ' . $filename);
+                    $errors = true;
+                }
+            }
         }
-
-        $save->added    = array_unique($added);
-        $save->modified = array_unique($modified);
-        $save->removed  = array_unique($removed);
-
-        /**
-         *  Create raw links to the sources of that files, like:
-         *      https://raw.github.com/slaFFik/github-auto-deploy/master/config.php
-         *  Also paths are created (place where to upload)
-         */
-        $i = 0;
-        foreach ($save->added as $add) {
-            // exclude those files we don't need to be synced with a repo
-            if ($this->excluding_file($add)) continue;
-
-            $files['download'][$i]['name'] = $add;
-            $files['download'][$i]['url']  = 'https://raw.github.com/' . GH_USERNAME . '/' . GH_REPO . '/' . GH_BRANCH . '/' . $add;
-            $files['download'][$i]['path'] = GH_UPLOAD_PATH . '/' . $add;
-            $this->create_dir($files['download'][$i]['path']);
-            $i++;
+        if (!$errors) {
+            GitHubAutoDeployment::log('deployment', 'All systems go!');
         }
-        foreach ($save->modified as $modify) {
-            // exclude those files we don't need to be synced with a repo
+    }
+
+    protected function addFile($file) {
+
             if ($this->excluding_file($modify)) continue;
 
-            $files['download'][$i]['name'] = $modify;
-            $files['download'][$i]['url']  = 'https://raw.github.com/' . GH_USERNAME . '/' . GH_REPO . '/' . GH_BRANCH . '/' . $modify;
-            $files['download'][$i]['path'] = GH_UPLOAD_PATH . '/' . $modify;
-            $this->create_dir($files['download'][$i]['path']);
-            $i++;
-        }
-        foreach ($save->removed as $remove) {
-            // exclude those files we don't need to be synced with a repo
-            if ($this->excluding_file($remove)) continue;
+            $url  = 'https://raw.github.com/' . GH_USERNAME . '/' . GH_REPO . '/' . GH_BRANCH . '/' . $file;
+            $path = GH_UPLOAD_PATH . '/' . $file;
+            $this->create_dir($path);
 
-            $files['remove'][$i]['name'] = $remove;
-            $files['remove'][$i]['path'] = GH_UPLOAD_PATH . '/' . $remove;
-            $i++;
-        }
+            $content = file_get_contents($url);
 
-        return $files;
+            // upload
+            if(file_put_contents($path, $content)) {
+                return true;
+            } else {
+                return false;
+            }
+    }
+
+    protected function removeFile($file) {
+
+            $path = GH_UPLOAD_PATH . '/' . $file;
+
+            // upload
+            if(unlink($path)) {
+                return true;
+            } else {
+                return false;
+            }
     }
 
     /**
@@ -166,46 +160,11 @@ class GAD{
     }
 
     /**
-     *  Actually the deploy is done below
-     */
-    protected function deploy(){
-        // list of successfully written files
-        $names = array();
-        // process new and modified files
-        foreach($this->files['download'] as $download){
-            // download
-            $content = file_get_contents($download['url']);
-            // upload
-            if(file_put_contents($download['path'], $content))
-                $names[] = $download['name'];
-            else
-                GAD::log('error', 'Error while trying to upload this file: ' . $download['name'], true);
-        }
-
-        if (!empty($names))
-            GAD::log('success', 'Modified/added files: ' . implode(', ', $names));
-
-        // delete files that were removed
-        if(isset($this->files['remove'])){
-            // files that were removed
-            $removed = array();
-            foreach ($this->files['remove'] as $remove) {
-                if (unlink($remove['path']))
-                    $removed[] = $remove['name'];
-                else
-                    GAD::log('error', 'Error while trying to remove this file: ' . $remove['name']);
-            }
-            if (!empty($removed))
-                GAD::log('success', 'Deleted files: ' . implode(', ', $removed));
-        }
-    }
-
-    /**
      *  Save to the log all events connected with the deployment process
      */
     static function log($status, $message, $die = false){
-        file_put_contents(GAD::LOG_FILE,
-                            date('Y.m.d@H:i:s') . ' - ' . strtoupper($status) . ' - ' . $message . "\r\n",
+        file_put_contents(GitHubAutoDeployment::LOG_FILE,
+                            date('Y.m.d@H:i:s') . ' - ' . strtoupper($status) . ' - ' . $message . "\n",
                             FILE_APPEND
                         );
         if ($die)
@@ -222,26 +181,12 @@ class GAD{
 
         // recursion
         if (!mkdir($path, 0755, true)) {
-            GAD::log('error', 'Failed to create folders: ' . $path, true);
+            GitHubAutoDeployment::log('error', 'Failed to create folders: ' . $path, true);
         }
-    }
-
-    /**
-     *  Display variable content in a better way
-     */
-    final protected function print_var($var, $die = false){
-        echo '<pre>';
-        if ( !empty($var))
-            print_r($var);
-        else
-            var_dump($var);
-        echo '</pre>';
-        if ($die)
-            die;
     }
 
 }
 
-$deploy = new GAD($_POST['payload']);
+$deploy = new GitHubAutoDeployment($_POST['payload']);
 
 ?>
