@@ -33,7 +33,7 @@ if (!defined('GH_UPLOAD_PATH'))
  */
 class GitHubAutoDeployment {
     // where to save all deploy results
-    const LOG_FILE = './log.txt';
+    const LOG_FILE = './deploy_log.txt';
 
     // what we received from Github
     public $data   = false;
@@ -97,17 +97,17 @@ class GitHubAutoDeployment {
 
         // get the list of all files we need to upload
         foreach($this->data->commits as $commit){
-            $add    = array_merge($commit->added,$commit->modified);
+            $add = array_merge($commit->added,$commit->modified);
 
             foreach($add as $filename) {
-                if (!addFile($filename)) {
+                if (!$this->addFile($filename)) {
                     GitHubAutoDeployment::log('error', 'Error while trying to upload this file: ' . $filename);
                     $errors = true;
                 }
             }
 
             foreach($commit->removed as $filename) {
-                if (!removeFile($filename)) {
+                if (!$this->removeFile($filename)) {
                     GitHubAutoDeployment::log('error', 'Error while trying to remove this file: ' . $filename);
                     $errors = true;
                 }
@@ -120,8 +120,6 @@ class GitHubAutoDeployment {
 
     protected function addFile($file) {
 
-            if ($this->excluding_file($modify)) continue;
-
             $url  = 'https://raw.github.com/' . GH_USERNAME . '/' . GH_REPO . '/' . GH_BRANCH . '/' . $file;
             $path = GH_UPLOAD_PATH . '/' . $file;
             $this->create_dir($path);
@@ -129,23 +127,15 @@ class GitHubAutoDeployment {
             $content = file_get_contents($url);
 
             // upload
-            if(file_put_contents($path, $content)) {
-                return true;
-            } else {
-                return false;
-            }
+            return file_put_contents($path, $content);
     }
 
     protected function removeFile($file) {
 
             $path = GH_UPLOAD_PATH . '/' . $file;
 
-            // upload
-            if(unlink($path)) {
-                return true;
-            } else {
-                return false;
-            }
+            // delete
+            return unlink($path);
     }
 
     /**
@@ -153,10 +143,7 @@ class GitHubAutoDeployment {
      *      If returned true - omit.
      */
     protected function excluding_file($file){
-        if (in_array($file, $this->ex_files) || in_array(dirname($file), $this->ex_dirs))
-            return true;
-
-        return false;
+        return (in_array($file, $this->ex_files) || in_array(dirname($file), $this->ex_dirs));
     }
 
     /**
