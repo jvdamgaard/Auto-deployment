@@ -5,6 +5,14 @@
  *
  *  This file will make your project available on a live server several seconds
  *      after each push was made to a repository by any user
+ *
+ *  TO-DO
+ *      - ignore files (git files)
+ *      - compile less
+ *      - minify js and css
+ *      - minify html
+ *      - minify images
+ *      - refresh build option
  */
 
 // Prevent some childish-hackish things
@@ -52,7 +60,7 @@ class GitHubAutoDeployment {
      *  List of files you want to exclude from a deploy
      *  This path should be relative to a GH_UPLOAD_PATH, without facing and trailing slashes
      */
-    public $ex_files = array();
+    public $ex_files = array('*.gitattributes','*.gitignore','*.md');
 
     /**
      *  List of folders you want to exclude from a deploy
@@ -100,16 +108,20 @@ class GitHubAutoDeployment {
             $add = array_merge($commit->added,$commit->modified);
 
             foreach($add as $filename) {
-                if (!$this->addFile($filename)) {
-                    GitHubAutoDeployment::log('error', 'Error while trying to upload this file: ' . $filename);
-                    $errors = true;
+                if (!$this->excludeFile($filename)) {
+                    if (!$this->addFile($filename)) {
+                        GitHubAutoDeployment::log('error', 'Error while trying to upload this file: ' . $filename);
+                        $errors = true;
+                    }
                 }
             }
 
             foreach($commit->removed as $filename) {
-                if (!$this->removeFile($filename)) {
-                    GitHubAutoDeployment::log('error', 'Error while trying to remove this file: ' . $filename);
-                    $errors = true;
+                if (!$this->excludeFile($filename)) {
+                    if (!$this->removeFile($filename)) {
+                        GitHubAutoDeployment::log('error', 'Error while trying to remove this file: ' . $filename);
+                        $errors = true;
+                    }
                 }
             }
         }
@@ -122,7 +134,7 @@ class GitHubAutoDeployment {
 
             $url  = 'https://raw.github.com/' . GH_USERNAME . '/' . GH_REPO . '/' . GH_BRANCH . '/' . $file;
             $path = GH_UPLOAD_PATH . '/' . $file;
-            $this->create_dir($path);
+            $this->createDir($path);
 
             $content = file_get_contents($url);
 
@@ -142,7 +154,7 @@ class GitHubAutoDeployment {
      *  Check that current file is not in an exlcude list
      *      If returned true - omit.
      */
-    protected function excluding_file($file){
+    protected function excludeFile($file){
         return (in_array($file, $this->ex_files) || in_array(dirname($file), $this->ex_dirs));
     }
 
@@ -161,7 +173,7 @@ class GitHubAutoDeployment {
     /**
      *  Create appropriate folders if they don't exist
      */
-    protected function create_dir($file){
+    protected function createDir($file){
         $path = dirname($file);
         if(is_dir($path))
             return;
