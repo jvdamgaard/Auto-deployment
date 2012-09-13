@@ -9,16 +9,20 @@
  *  TO-DO
  *      - ignore files (git files)
  *      - compile less
- *      x minify js and css
+ *      x minify js and css with YUI compressor
  *      - minify html
  *      - minify images
  *      - refresh build option
+ *      - options for class
+ *      - class in seperate file
  */
 
 // Prevent some childish-hackish things
 if(!isset($_POST['payload']) || empty($_POST['payload'])) {
     GitHubAutoDeployment::log('error', 'No payload content', true);
 }
+
+include_once('yuicompressor.php');
 
 /**
  *  Below are configs used for a deploy. Double check them.
@@ -68,6 +72,18 @@ class GitHubAutoDeployment {
      *  This path should be relative to a GH_UPLOAD_PATH, without facing and trailing slashes
      */
     public $ex_dirs  = array();
+
+
+    public $cssCompressor = new YUICompressor(
+                                dirname(__FILE__).'/yuicompressor-2.4.7.jar',
+                                dirname(__FILE__),
+                                array('type' => 'css')
+                            );
+    public $jsCompressor =  new YUICompressor(
+                                dirname(__FILE__).'/yuicompressor-2.4.7.jar',
+                                dirname(__FILE__),
+                                array('type' => 'js')
+                            );
 
     /**
      *  Now time for a deploy - get the POST data
