@@ -7,7 +7,7 @@
  *      after each push was made to a repository by any user
  *
  *  TO-DO
- *      - ignore files (git files)
+ *      x ignore files (git files)
  *      - compile less
  *      - minify js and css
  *      - minify html
