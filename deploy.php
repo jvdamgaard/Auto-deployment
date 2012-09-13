@@ -9,7 +9,7 @@
  *  TO-DO
  *      - ignore files (git files)
  *      - compile less
- *      - minify js and css
+ *      x minify js and css
  *      - minify html
  *      - minify images
  *      - refresh build option
