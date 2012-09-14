@@ -14,7 +14,7 @@ class GitHubAutoDeployment {
     public  $settings       = array(
                                 'payload' => null,
                                 'username' => null,		// GitHub username
-                                'repo' => null,			// repository on GitHub
+                                'repository' => null,			// repository on GitHub
                                 'branches' => null,		// array - key: branch (* could be used alone or in beginnng or end of string); val: absolute path to deploye branch in
                                 'compileLess' => true,
                                 'compressJs' => true,
@@ -87,7 +87,7 @@ class GitHubAutoDeployment {
         $this->branch = substr($this->data-ref,strrchr($this->data-ref,"/")+1);
 
         // TO-DO: asterix search
-        if (!in_array($this->branch, $settings-branches)) {
+        if (!array_key_exists($this->branch, $this->settings['branches'])) {
             return false;
         }
 
@@ -131,8 +131,8 @@ class GitHubAutoDeployment {
 
     protected function addFile($file) {
 
-            $url  = 'https://raw.github.com/' . GH_USERNAME . '/' . GH_REPO . '/' . GH_BRANCH . '/' . $file;
-            $path = GH_UPLOAD_PATH . '/' . $file;
+            $url  = 'https://raw.github.com/' . $this->settings['username'] . '/' . $this->settings['repository'] . '/' . $this->branch . '/' . $file;
+            $path = $this->settings['branches'][$this->branch] . '/' . $file;
             $this->createDir($path);
 
             $content = file_get_contents($url);
@@ -143,7 +143,7 @@ class GitHubAutoDeployment {
 
     protected function removeFile($file) {
 
-            $path = GH_UPLOAD_PATH . '/' . $file;
+            $path = $this->settings['branches'][$this->branch] . '/' . $file;
 
             // delete
             return unlink($path);

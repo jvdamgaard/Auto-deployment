@@ -19,7 +19,7 @@
 
 $settings =	array(
                  'username' => 'jvdamgaard',
-                 'repo' => 'm.adaptivedesignstudio.com',
+                 'repository' => 'm.adaptivedesignstudio.com',
                  'branches' => array(
                          'master' => dirname(__FILE__),
                          'release-*' => dirname(dirname(__FILE__)).'/test-m.adaptivedesignstudio.com',
