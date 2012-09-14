@@ -66,10 +66,16 @@ class GitHubAutoDeployment {
         // We received json object - decode it
         $this->data = json_decode(stripslashes($this->settings['payload']));
 
+        // debug
+        GitHubAutoDeployment::log('settings 1', print_r($this->settings,true), false);
+
         // If branch is not specified
         if(!$this->testBranch()) {
             die;
         }
+
+        // debug
+        GitHubAutoDeployment::log('settings 2', print_r($this->settings,true), false);
 
 		$this->deploy();
     }
@@ -78,6 +84,13 @@ class GitHubAutoDeployment {
         if(!isset($this->settings['branches']) || empty($this->settings['branches'])) {
             return false;
         }
+        $this->branch = substr($this->data-ref,strrchr($this->data-ref,"/")+1);
+
+        // TO-DO: asterix search
+        if (!in_array($this->branch, $settings-branches)) {
+            return false;
+        }
+
 		return true;
         // to-do: find branch
     }

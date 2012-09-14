@@ -18,7 +18,6 @@
  */
 
 $settings =	array(
-                 'payload' => $_POST['payload'],
                  'username' => 'jvdamgaard',
                  'repo' => 'm.adaptivedesignstudio.com',
                  'branches' => array(
