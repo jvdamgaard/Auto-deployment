@@ -10,12 +10,12 @@ class GitHubAutoDeployment {
     const   LOG_FILE        = './deploy/log.txt';       // where to save all deploy results
 
     public  $data           = false;                    // what we received from Github
-    public  $branch         = false;
+    public  $branch         = false;					// Actual branch to deploy from
     public  $settings       = array(
                                 'payload' => null,
-                                'username' => null,
-                                'repo' => null,
-                                'branches' => null,
+                                'username' => null,		// GitHub username
+                                'repo' => null,			// repository on GitHub
+                                'branches' => null,		// array - key: branch (* could be used alone or in beginnng or end of string); val: absolute path to deploye branch in
                                 'compileLess' => true,
                                 'compressJs' => true,
                                 'compressCss' => true,
@@ -29,22 +29,22 @@ class GitHubAutoDeployment {
                                 '50.57.128.197',
                                 '108.171.174.178'
                             );
-    public  $ex_files       = array(                    // List of files you want to exclude from a deploy
+    public  $ex_files       = array(                    // list of files you want to exclude from a deploy
                                 '*.gitattributes',
                                 '*.gitignore',
                                 '*.md',
                                 '*.less'
                             );
-    public  $ex_dirs        = array(                    // List of folders you want to exclude from a deploy
+    public  $ex_dirs        = array(                    // list of folders you want to exclude from a deploy
                                 'less'
                             );
-    public  $cssCompressor  = new YUICompressor(
-                                dirname(__FILE__).'/yuicompressor-2.4.7.jar',
+    public  $cssCompressor  = new YUICompressor(		// css compresssor
+                                dirname(__FILE__).'/deploy/yuicompressor-2.4.7.jar',
                                 dirname(__FILE__),
                                 array('type' => 'css')
                             );
-    public $jsCompressor    = new YUICompressor(
-                                dirname(__FILE__).'/yuicompressor-2.4.7.jar',
+    public 	$jsCompressor   = new YUICompressor(		// js compressor
+                                dirname(__FILE__).'/deploy/yuicompressor-2.4.7.jar',
                                 dirname(__FILE__),
                                 array('type' => 'js')
                             );
@@ -66,27 +66,26 @@ class GitHubAutoDeployment {
         // We received json object - decode it
         $this->data = json_decode(stripslashes($this->settings['payload']));
 
-        // different branch
-        if($this->data->ref !== 'refs/heads/'.GH_BRANCH) {
+        // If branch is not specified
+        if(!$this->testBranch()) {
             die;
         }
 
-        $this->testBranch();
-
-        $this->deploy();
+		$this->deploy();
     }
 
     protected function testBranch() {
         if(!isset($this->settings['branches']) || empty($this->settings['branches'])) {
-            die;
+            return false;
         }
+		return true;
         // to-do: find branch
     }
 
     /**
      *  Actually the deploy is done below
      */
-    protected function deploy(){
+    public function deploy(){
 
         $errors = false;
 

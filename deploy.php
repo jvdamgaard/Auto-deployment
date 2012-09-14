@@ -17,25 +17,35 @@
  *      x class in seperate file
  */
 
+$settings =	array(
+                 'payload' => $_POST['payload'],
+                 'username' => 'jvdamgaard',
+                 'repo' => 'm.adaptivedesignstudio.com',
+                 'branches' => array(
+                         'master' => dirname(__FILE__),
+                         'release-*' => dirname(dirname(__FILE__)).'/test-m.adaptivedesignstudio.com',
+                         'hotfix_*' => dirname(dirname(__FILE__)).'/test-m.adaptivedesignstudio.com',
+                         'develop' => dirname(dirname(__FILE__)).'/dev-m.adaptivedesignstudio.com'
+                     )
+             );
+
 include_once('deploy/githubautodeployment.php');
 
+// Auto deploy form GitHub
 if(isset($_POST['payload']) && !empty($_POST['payload'])) {
-    $deploy =   new GitHubAutoDeployment(array(
-                    'payload' => $_POST['payload'],
-                    'username' => 'jvdamgaard',
-                    'repo' => 'm.adaptivedesignstudio.com',
-                    'branches' => array(
-                            'master' => dirname(__FILE__).'/m.adaptivedesignstudio.com',
-                            'release-*' => dirname(__FILE__).'/test-m.adaptivedesignstudio.com',
-                            'hotfix_*' => dirname(__FILE__).'/test-m.adaptivedesignstudio.com',
-                            'develop' => dirname(__FILE__).'/dev-m.adaptivedesignstudio.com'
-                        )
-                    'compileLess' => true,
-                    'compressJs' => true,
-                    'compressCss' => true,
-                    'compressHtml' => true,
-                    'compressImages' => true
-                ));
-}
+    $deploy =   new GitHubAutoDeployment(
+					array_merge(
+						array('payload' => $_POST['payload']),
+						$settings
+					)
+				);
+				
+// Rebuild site 				
+} else (isset($_POST['rebuild']) && !empty($_POST['rebuild'])) {
 
+// Show web interface	
+} else {
+	
+}
+ 
 ?>
