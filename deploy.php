@@ -23,7 +23,7 @@ $settings =	array(
                  'branches' => array(
                          'master' => dirname(dirname(__FILE__)),
                          'release-*' => dirname(dirname(dirname(__FILE__))).'/test-m.adaptivedesignstudio.com',
-                         'hotfix_*' => dirname(dirname(dirname(__FILE__))).'/test-m.adaptivedesignstudio.com',
+                         'hotfix-*' => dirname(dirname(dirname(__FILE__))).'/test-m.adaptivedesignstudio.com',
                          'develop' => dirname(dirname(dirname(__FILE__))).'/dev-m.adaptivedesignstudio.com'
                      )
              );

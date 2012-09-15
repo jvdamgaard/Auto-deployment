@@ -11,6 +11,7 @@ class GitHubAutoDeployment {
 
     public  $data           = false;                    // what we received from Github
     public  $branch         = false;					// Actual branch to deploy from
+    public  $branchPath     = false;                    // Actual branch to deploy from
     public  $settings       = array(
                                 'payload' => null,
                                 'username' => null,		// GitHub username
@@ -64,8 +65,7 @@ class GitHubAutoDeployment {
 
         // check that we have rights to deploy - IP check
         if (!in_array($_SERVER['REMOTE_ADDR'], $this->ips)) {
-            // debug
-            //GitHubAutoDeployment::log('error', 'Attempt to make a deploy from a not allowed IP: ' . $_SERVER['REMOTE_ADDR'], true);
+            debug GitHubAutoDeployment::log('error', 'Attempt to make a deploy from a not allowed IP: ' . $_SERVER['REMOTE_ADDR'], true);
         }
 
         // We received json object - decode it
@@ -86,13 +86,46 @@ class GitHubAutoDeployment {
 
         $this->branch = substr(strrchr($this->data->ref,"/"),1);
 
-        // TO-DO: asterix search
-        if (!array_key_exists($this->branch, $this->settings['branches'])) {
-            return false;
-        }
+        // Is equal to
+        if (array_key_exists($this->branch, $this->settings['branches'])) {
+            $this->branchPath = $this->settings['branches'][$this->branch];
+            return true;
 
-		return true;
-        // to-do: find branch
+        // Branches with asterix
+        } else {
+            foreach ($this->settings['branches'] as $branch => $dir) {
+
+                // Starts with asterix
+                if ($this->startsWith($branch, '*')) {
+                    $tempBranch = substr($branch, 1);
+                    if ($this->endsWith($this->branch,$tempBranch)) {
+                        $this->branch = $branch;
+                        $this->branchPath = $dir;
+                        return true;
+                    }
+
+                // Ends with asterix
+                } elseif ($this->endsWith($branch, '*')) {
+                    $tempBranch = substr($branch, 0,-1);
+                    if ($this->startsWith($this->branch,$tempBranch)) {
+                        $this->branch = $branch;
+                        $this->branchPath = $dir;
+                        return true;
+                    }
+                }
+            }
+        } 
+
+        // Branch wasn't found in settings
+		return false;
+    }
+
+    protected function endsWith($str,$test) {
+        return (substr_compare($str, $test, -strlen($test), strlen($test)) === 0);
+    }
+
+    protected function startsWith($str,$test) {
+        return (strpos($str, $test) === 0);
     }
 
     /**
