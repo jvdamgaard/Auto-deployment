@@ -33,27 +33,12 @@ class YUICompressor
     {
         $this->options[$option] = $value;
     }
-
-    // add a file (absolute path) to be compressed
-    function addFile($file)
-    {
-        array_push($this->files, $file);
-    }
-    
-    // add a strong to be compressed
-    function addString($string)
-    {
-        $this->string .= ' ' . $string;
-    }
     
     // the meat and potatoes, executes the compression command in shell
-    function compress()
+    function compress($string)
     {
-        
-        // read the input
-        foreach ($this->files as $file) {
-    		$this->string .= file_get_contents($file) or die("Cannot read from uploaded file");        
-        }
+
+        $this->string = ' ' . $string;
     	
         // create single file from all input
         $input_hash = sha1($this->string);
@@ -77,17 +62,17 @@ class YUICompressor
     	   $cmd .= " -v";
         }
             
-    if ($this->options['nomunge']) {
-      $cmd .= ' --nomunge';
-    }
-    
-    if ($this->options['semi']) {
-      $cmd .= ' --preserve-semi';
-    }
-    
-    if ($this->options['nooptimize']) {
-      $cmd .= ' --disable-optimizations';
-    }
+        if ($this->options['nomunge']) {
+          $cmd .= ' --nomunge';
+        }
+        
+        if ($this->options['semi']) {
+          $cmd .= ' --preserve-semi';
+        }
+        
+        if ($this->options['nooptimize']) {
+          $cmd .= ' --disable-optimizations';
+        }
     
         // execute the command
     	exec($cmd . ' 2>&1', $raw_output);

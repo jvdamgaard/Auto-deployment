@@ -170,6 +170,23 @@ class GitHubAutoDeployment {
 
             $content = file_get_contents($url);
 
+            //debug
+            print('<br>file: '.$file.'<br>')
+            print('before: '.$content.'<br>');
+
+            // Compress js files
+            if ($this->settings['compressJs'] && endsWith($file,'.js')) {
+                $content = $this->jsCompressor.compress($content);
+            }
+
+            // Compress css files
+            if ($this->settings['compressJs'] && endsWith($file,'.css')) {
+                $content = $this->cssCompressor.compress($content);
+            }
+
+            //debug
+            print('after: '.$content.'<br>');
+
             // upload
             return file_put_contents($path, $content);
     }
