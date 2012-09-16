@@ -7,8 +7,7 @@ class YUICompressor
     // absolute path to YUI jar file.
     private static $JAR_PATH;
     private static $TEMP_FILES_DIR;
-    private $options = array('type' => 'js',
-                             'linebreak' => false,
+    private $options = array('linebreak' => false,
                              'verbose' => false,
                              'nomunge' => false,
                              'semi' => false,
@@ -35,7 +34,7 @@ class YUICompressor
     }
     
     // the meat and potatoes, executes the compression command in shell
-    function compress($string)
+    function compress($string,$type)
     {
 
         $this->string = ' ' . $string;
@@ -51,7 +50,7 @@ class YUICompressor
         $cmd = "java -Xmx32m -jar " . escapeshellarg($this->JAR_PATH) . ' ' . escapeshellarg($file) . " --charset UTF-8";
     
         // set the file type
-    	$cmd .= " --type " . (strtolower($this->options['type']) == "css" ? "css" : "js");
+    	$cmd .= " --type " . (strtolower($type) == "css" ? "css" : "js");
     	
     	// and add options as needed
     	if ($this->options['linebreak'] && intval($this->options['linebreak']) > 0) {

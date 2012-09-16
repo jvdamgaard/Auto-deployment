@@ -52,20 +52,14 @@ class GitHubAutoDeployment {
             $this->settings[$key] = $val;
         }
 
-        $this->cssCompressor = new YUICompressor(        // css compresssor
+        $this->compressor = new YUICompressor(        // css compresssor
                                     dirname(__FILE__).'/yuicompressor-2.4.7.jar',
-                                    dirname(__FILE__).'/tmp',
-                                    array('type' => 'css')
-                                );
-        $this->jsCompressor =  new YUICompressor(        // js compressor
-                                    dirname(__FILE__).'/yuicompressor-2.4.7.jar',
-                                    dirname(__FILE__).'/tmp',
-                                    array('type' => 'js')
+                                    dirname(__FILE__).'/tmp')
                                 );
 
         // check that we have rights to deploy - IP check
         if (!in_array($_SERVER['REMOTE_ADDR'], $this->ips)) {
-            debug GitHubAutoDeployment::log('error', 'Attempt to make a deploy from a not allowed IP: ' . $_SERVER['REMOTE_ADDR'], true);
+            //debug GitHubAutoDeployment::log('error', 'Attempt to make a deploy from a not allowed IP: ' . $_SERVER['REMOTE_ADDR'], true);
         }
 
         // We received json object - decode it
@@ -170,22 +164,22 @@ class GitHubAutoDeployment {
 
             $content = file_get_contents($url);
 
-            //debug
-            print('<br>file: '.$file.'<br>')
-            print('before: '.$content.'<br>');
+            /*// Compress js files
+            if ($this->settings['compressJs'] && $this->endsWith($file,'.js')) {
 
-            // Compress js files
-            if ($this->settings['compressJs'] && endsWith($file,'.js')) {
-                $content = $this->jsCompressor.compress($content);
+                //debug
+                print('<br>file: '.$file.'<br>');
+                print('before: '.$content.'<br>');
+                $content = $this->compressor->compress($content,'js');
+
+                //debug
+                print('after: '.$content.'<br>');
             }
 
             // Compress css files
-            if ($this->settings['compressJs'] && endsWith($file,'.css')) {
-                $content = $this->cssCompressor.compress($content);
-            }
-
-            //debug
-            print('after: '.$content.'<br>');
+            if ($this->settings['compressJs'] && $this->endsWith($file,'.css')) {
+                $content = $this->compressor->compress($content,'css');
+            }*/
 
             // upload
             return file_put_contents($path, $content);
