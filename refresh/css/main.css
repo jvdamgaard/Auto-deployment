@@ -1,0 +1,340 @@
+/*
+ * HTML5 Boilerplate
+ *
+ * What follows is the result of much research on cross-browser styling.
+ * Credit left inline and big thanks to Nicolas Gallagher, Jonathan Neal,
+ * Kroc Camen, and the H5BP dev community and team.
+ */
+
+/* ==========================================================================
+   Base styles: opinionated defaults
+   ========================================================================== */
+
+html,
+button,
+input,
+select,
+textarea {
+    color: #222;
+}
+
+body {
+    font-size: 1em;
+    line-height: 1.4;
+}
+
+a {
+    color: #00e;
+}
+
+a:visited {
+    color: #551a8b;
+}
+
+a:hover {
+    color: #06e;
+}
+
+/*
+ * Remove the gap between images and the bottom of their containers: h5bp.com/i/440
+ */
+
+img {
+    vertical-align: middle;
+}
+
+/*
+ * Remove default fieldset styles.
+ */
+
+fieldset {
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+
+/*
+ * Allow only vertical resizing of textareas.
+ */
+
+textarea {
+    resize: vertical;
+}
+
+/* ==========================================================================
+   Author's custom styles
+   ========================================================================== */
+
+* {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    font-family: 'Open Sans', sans-serif;
+}
+
+body {
+    background: url('../images/low_contrast_linen.png') repeat;
+}
+
+#container {
+    background: url('../images/metalic-background.jpg') repeat;
+    position: relative;
+    width: 320px;
+    margin: 0 auto;
+    padding: 20px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.27), 0 0 40px rgba(0, 0, 0, 0.06) inset;
+    -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.27), 0 0 40px rgba(0, 0, 0, 0.06) inset; 
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.27), 0 0 40px rgba(0, 0, 0, 0.06) inset;
+}
+#container:before,
+#container:after {
+    content: '';
+    z-index: -1;
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+    width: 70%;
+    max-width: 300px; /* avoid rotation causing ugly appearance at large container widths */
+    max-height: 100px;
+    height: 55%;
+    -webkit-box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    -moz-box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    -webkit-transform: skew(-15deg) rotate(-6deg);
+    -moz-transform: skew(-15deg) rotate(-6deg);
+    -ms-transform: skew(-15deg) rotate(-6deg);
+    -o-transform: skew(-15deg) rotate(-6deg);
+    transform: skew(-15deg) rotate(-6deg); 
+}
+
+
+#container:after {
+    left: auto;
+    right: 10px;
+    -webkit-transform: skew(15deg) rotate(6deg);
+    -moz-transform: skew(15deg) rotate(6deg);
+    -ms-transform: skew(15deg) rotate(6deg);
+    -o-transform: skew(15deg) rotate(6deg);
+    transform: skew(15deg) rotate(6deg); 
+}
+#container input {
+    width: 280px;
+    padding: 10px 20px;
+    -webkit-border-radius: 2px;
+    border-radius: 2px;
+    border: 1px solid #ccc;
+}
+.btn{
+    display:block;
+    cursor:pointer;
+    text-align:center;
+    text-decoration:none;
+    outline:0;
+    color:#fff;
+    border:1px solid #e63c26;
+    -moz-border-radius-topleft:2px;
+    -moz-border-radius-topright:2px;
+    -moz-border-radius-bottomright:2px;
+    -moz-border-radius-bottomleft:2px;
+    -webkit-border-radius:2px 2px 2px 2px;
+    border-radius:2px 2px 2px 2px;
+    background-color:#e84e3a;
+    background-image:-moz-linear-gradient(top,#e95441,#e7442f);
+    background-image:-ms-linear-gradient(top,#e95441,#e7442f);
+    background-image:-webkit-gradient(linear,0 0,0 100%,from(#e95441),to(#e7442f));
+    background-image:-webkit-linear-gradient(top,#e95441,#e7442f);
+    background-image:-o-linear-gradient(top,#e95441,#e7442f);
+    background-image:linear-gradient(top,#e95441,#e7442f);
+    background-repeat:repeat-x;
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#e95441',endColorstr='#e7442f',GradientType=0);
+    height:48px;
+    line-height:48px
+}
+.btn:visited{
+    color:#fff;
+    text-decoration:none
+}
+.btn:hover{
+    background-color:#e74531;
+    background-image:-moz-linear-gradient(top,#e84c38,#e63c26);
+    background-image:-ms-linear-gradient(top,#e84c38,#e63c26);
+    background-image:-webkit-gradient(linear,0 0,0 100%,from(#e84c38),to(#e63c26));
+    background-image:-webkit-linear-gradient(top,#e84c38,#e63c26);
+    background-image:-o-linear-gradient(top,#e84c38,#e63c26);
+    background-image:linear-gradient(top,#e84c38,#e63c26);
+    background-repeat:repeat-x;
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#e84c38',endColorstr='#e63c26',GradientType=0);
+    -webkit-box-shadow:0 1px 2px 0 rgba(0,0,0,0.2);
+    -moz-box-shadow:0 1px 2px 0 rgba(0,0,0,0.2);
+    box-shadow:0 1px 2px 0 rgba(0,0,0,0.2);
+    border:1px solid #be2916;
+    text-decoration:none;
+    color:#fff
+}
+.btn:focus{
+    -webkit-box-shadow:inset 0 0 0 1px #fff;
+    -moz-box-shadow:inset 0 0 0 1px #fff;
+    box-shadow:inset 0 0 0 1px #fff
+}
+.btn:active,.btn.active{
+    -webkit-box-shadow:inset 0 1px 2px 0 rgba(0,0,0,0.3);
+    -moz-box-shadow:inset 0 1px 2px 0 rgba(0,0,0,0.3);
+    box-shadow:inset 0 1px 2px 0 rgba(0,0,0,0.3)
+}
+.btn.disabled,.btn[disabled]{
+    cursor:default;
+    background-image:none;
+    background-color:#d42e19;
+    -moz-opacity:.65;
+    -khtml-opacity:.65;
+    -webkit-opacity:.65;
+    opacity:.65;
+    filter:alpha(opacity=65);
+    -webkit-box-shadow:none;
+    -moz-box-shadow:none;
+    box-shadow:none
+}
+
+
+
+
+
+
+
+
+
+
+/* ==========================================================================
+   Helper classes
+   ========================================================================== */
+
+/* Prevent callout */
+
+.nocallout {
+    -webkit-touch-callout: none;
+}
+
+.pressed {
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+/* A hack for HTML5 contenteditable attribute on mobile */
+
+textarea[contenteditable] {
+    -webkit-appearance: none;
+}
+
+/* A workaround for S60 3.x and 5.0 devices which do not animated gif images if
+   they have been set as display: none */
+
+.gifhidden {
+    position: absolute;
+    left: -100%;
+}
+
+/*
+ * Image replacement
+ */
+
+.ir {
+    background-color: transparent;
+    background-repeat: no-repeat;
+    border: 0;
+    direction: ltr;
+    display: block;
+    overflow: hidden;
+    text-align: left;
+    text-indent: -999em;
+}
+
+.ir br {
+    display: none;
+}
+
+/*
+ * Hide from both screenreaders and browsers: h5bp.com/u
+ */
+
+.hidden {
+    display: none !important;
+    visibility: hidden;
+}
+
+/*
+ * Hide only visually, but have it available for screenreaders: h5bp.com/v
+ */
+
+.visuallyhidden {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+}
+
+/*
+ * Extends the .visuallyhidden class to allow the element to be focusable
+ * when navigated to via the keyboard: h5bp.com/p
+ */
+
+.visuallyhidden.focusable:active,
+.visuallyhidden.focusable:focus {
+    clip: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    position: static;
+    width: auto;
+}
+
+/*
+ * Hide visually and from screenreaders, but maintain layout
+ */
+
+.invisible {
+    visibility: hidden;
+}
+
+/**
+ * Clearfix helper
+ * Used to contain floats: h5bp.com/q
+ */
+
+.clearfix:before,
+.clearfix:after {
+    content: "";
+    display: table;
+}
+
+.clearfix:after {
+    clear: both;
+}
+
+/*
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+
+.clearfix {
+    *zoom: 1;
+}
+
+/* ==========================================================================
+   EXAMPLE Media Queries for Responsive Design.
+   Theses examples override the primary ('mobile first') styles.
+   Modify as content requires.
+   ========================================================================== */
+
+@media only screen and (min-width: 800px) {
+    /* Style adjustments for viewports that meet the condition */
+}
+
+@media only screen and (-webkit-min-device-pixel-ratio: 1.5),
+       only screen and (min-resolution: 144dpi) {
+    /* Style adjustments for viewports that meet the condition */
+}

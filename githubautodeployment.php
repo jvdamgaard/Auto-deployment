@@ -54,7 +54,7 @@ class GitHubAutoDeployment {
 
         $this->compressor = new YUICompressor(        // css compresssor
                                     dirname(__FILE__).'/yuicompressor-2.4.7.jar',
-                                    dirname(__FILE__).'/tmp')
+                                    dirname(__FILE__).'/tmp'
                                 );
 
         // check that we have rights to deploy - IP check
