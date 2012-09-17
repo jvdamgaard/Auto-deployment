@@ -25,6 +25,8 @@
                 <p><input type="text" name="branch" placeholder="Branch"></p>
                 <p><a href="#" class="btn disabled" id="submit-rebuild">Rebuild</a></p>
                 <input type="hidden" name="rebuild" value="true">
+				<input type="hidden" name="username_check" value="<?php echo $user['username'];?>">
+				<input type="hidden" name="password_ckeck" value="<?php echo $user['password'];?>">
             </form>
         </div>
 
