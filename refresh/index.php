@@ -20,13 +20,13 @@
         <div id="container">
             <h1>Rebuild site</h1>
             <form>
-                <p><input type="text" name="username" placeholder="Username" autofocus="autofocus"></p>
-                <p><input type="password" name="password" placeholder="Password"></p>
-                <p><input type="text" name="branch" placeholder="Branch"></p>
+                <p id="username"><input type="text" name="username" placeholder="Username" autofocus="autofocus"></p>
+                <p id="password"><input type="password" name="password" placeholder="Password"></p>
+                <p id="branch"><input type="text" name="branch" placeholder="Branch"></p>
                 <p><a href="#" class="btn disabled" id="submit-rebuild">Rebuild</a></p>
                 <input type="hidden" name="rebuild" value="true">
 				<input type="hidden" name="username_check" value="<?php echo $user['username'];?>">
-				<input type="hidden" name="password_ckeck" value="<?php echo $user['password'];?>">
+				<input type="hidden" name="password_check" value="<?php echo $user['password'];?>">
             </form>
         </div>
 

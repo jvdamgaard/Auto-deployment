@@ -8,15 +8,25 @@ Zepto(function($){
 		var validated = true;
 		
 		//username
+		$('#username').removeClass('validated');
 		if (md5($('input[name="username"]').val()) == $('input[name="username_check"]').val()) {
-			
+			$('#username').addClass('validated');
 		} else {
 			validated = false;
 		}
 		
-		//username
+		//password
+		$('#password').removeClass('validated');
 		if (md5($('input[name="password"]').val()) == $('input[name="password_check"]').val()) {
-
+			$('#password').addClass('validated');
+		} else {
+			validated = false;
+		}
+		
+		//branch
+		$('#branch').removeClass('validated');
+		if ($('input[name="branch"]').val() != '') {
+			$('#branch').addClass('validated');
 		} else {
 			validated = false;
 		}

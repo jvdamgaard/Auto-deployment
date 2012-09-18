@@ -119,6 +119,24 @@ body {
     -o-transform: skew(15deg) rotate(6deg);
     transform: skew(15deg) rotate(6deg); 
 }
+p {
+  position: relative;
+}
+#username:before, #password:before, #branch:before {
+    content: '';
+    display: block;
+    position: absolute;
+    left: 1px;
+    top: 1px;
+    width: 10px;
+    height: 42px;
+    background: rgba(255,0,0,0.4);
+    -webkit-border-radius: 1px 0px 0px 1px;
+    border-radius: 1px 0px 0px 1px;
+}
+.validated:before {
+    background: rgba(0,255,0,0.4) !important;
+}
 #container input {
     width: 280px;
     padding: 10px 20px;
@@ -191,8 +209,8 @@ body {
     -moz-opacity:.15;
     -khtml-opacity:.15;
     -webkit-opacity:.15;
-    opacity:.15;
-    filter:alpha(opacity=15);
+    opacity:.40;
+    filter:alpha(opacity=40);
     -webkit-box-shadow:none;
     -moz-box-shadow:none;
     box-shadow:none
