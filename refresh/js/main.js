@@ -8,7 +8,18 @@ Zepto(function($) {
 		200);
 	$(window).bind('resize', centerContainer);
 
-	setInterval(validate, 100);
+	var branches = [];
+
+	$.ajaxJSONP({
+		url: 'https://api.github.com/repos/'+$('input[name="github_username"]').val()+'/'+$('input[name="github_repository"]').val()+'/branches?callback=?',
+		success: function(res){
+			for (var i in res.data) {
+				branches.push(res.data[i].name);
+				console.log(res.data[i].name);
+			}
+			setInterval(validate, 100);
+		}
+	});
 
 	function validate() {
 		var validated = true;
@@ -31,7 +42,7 @@ Zepto(function($) {
 
 		//branch
 		$('#branch').removeClass('validated');
-		if ($('input[name="branch"]').val() !== '') {
+		if ($.inArray($('input[name="branch"]').val(),branches) !== -1) {
 			$('#branch').addClass('validated');
 		} else {
 			validated = false;

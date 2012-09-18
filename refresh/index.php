@@ -27,6 +27,8 @@
                 	<input type="hidden" name="rebuild" value="true">
 					<input type="hidden" name="username_check" value="<?php echo $user['username'];?>">
 					<input type="hidden" name="password_check" value="<?php echo $user['password'];?>">
+					<input type="hidden" name="github_username" value="<?php echo $settings['username'];?>">
+					<input type="hidden" name="github_repository" value="<?php echo $settings['repository'];?>">
             	</form>
         	</div>
 		</div>
