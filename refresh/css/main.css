@@ -76,6 +76,14 @@ body {
     background: url('../images/low_contrast_linen.png') repeat;
 }
 
+.wrapper {
+	-moz-opacity:0;
+	-khtml-opacity:0;
+	-webkit-opacity:0;
+	opacity:0;
+	filter:alpha(opacity=0);
+}
+
 #container {
     background: #eee;
     position: relative;
@@ -128,7 +136,7 @@ p {
     position: absolute;
     left: 1px;
     top: 1px;
-    width: 10px;
+    width: 8px;
     height: 42px;
     background: rgba(255,0,0,0.4);
     -webkit-border-radius: 1px 0px 0px 1px;
@@ -137,7 +145,7 @@ p {
 .validated:before {
     background: rgba(0,255,0,0.4) !important;
 }
-#container input {
+input {
     width: 280px;
     padding: 10px 20px;
     -webkit-border-radius: 2px;
@@ -206,10 +214,10 @@ p {
     cursor:default;
     background-image:none;
     background-color:#d42e19;
-    -moz-opacity:.15;
-    -khtml-opacity:.15;
-    -webkit-opacity:.15;
-    opacity:.40;
+    -moz-opacity:.4;
+    -khtml-opacity:.4;
+    -webkit-opacity:.4;
+    opacity:.4;
     filter:alpha(opacity=40);
     -webkit-box-shadow:none;
     -moz-box-shadow:none;

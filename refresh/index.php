@@ -16,19 +16,20 @@
         <script src="refresh/js/vendor/modernizr-2.6.1.min.js"></script>
     </head>
     <body>
-        
-        <div id="container">
-            <h1>Rebuild site</h1>
-            <form>
-                <p id="username"><input type="text" name="username" placeholder="Username" autofocus="autofocus"></p>
-                <p id="password"><input type="password" name="password" placeholder="Password"></p>
-                <p id="branch"><input type="text" name="branch" placeholder="Branch"></p>
-                <p><a href="#" class="btn disabled" id="submit-rebuild">Rebuild</a></p>
-                <input type="hidden" name="rebuild" value="true">
-				<input type="hidden" name="username_check" value="<?php echo $user['username'];?>">
-				<input type="hidden" name="password_check" value="<?php echo $user['password'];?>">
-            </form>
-        </div>
+		<div class="wrapper">
+        	<div id="container">
+            	<h1>Rebuild site</h1>
+            	<form>
+                	<p id="username"><input type="text" name="username" placeholder="Username" autofocus="autofocus"></p>
+                	<p id="password"><input type="password" name="password" placeholder="Password"></p>
+                	<p id="branch"><input type="text" name="branch" placeholder="Branch"></p>
+                	<p><a href="#" class="btn disabled" id="submit-rebuild">Rebuild</a></p>
+                	<input type="hidden" name="rebuild" value="true">
+					<input type="hidden" name="username_check" value="<?php echo $user['username'];?>">
+					<input type="hidden" name="password_check" value="<?php echo $user['password'];?>">
+            	</form>
+        	</div>
+		</div>
 
         <script src="refresh/js/vendor/zepto.min.js"></script>
         <script src="refresh/js/helper.js"></script>
