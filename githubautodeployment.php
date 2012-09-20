@@ -59,7 +59,7 @@ class GitHubAutoDeployment {
 
         // check that we have rights to deploy - IP check
         if (!in_array($_SERVER['REMOTE_ADDR'], $this->ips)) {
-            //debug GitHubAutoDeployment::log('error', 'Attempt to make a deploy from a not allowed IP: ' . $_SERVER['REMOTE_ADDR'], true);
+            GitHubAutoDeployment::log('error', 'Attempt to make a deploy from a not allowed IP: ' . $_SERVER['REMOTE_ADDR'], true);
         }
 
         // We received json object - decode it

@@ -15,6 +15,7 @@
  *      - refresh build option
  *      x options for class
  *      x class in seperate file
+ *		- for private repositories	
  */
 
 $settings =	array(

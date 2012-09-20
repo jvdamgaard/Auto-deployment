@@ -1,22 +1,29 @@
 Zepto(function($) {
 
+	var branches = [],
+	validated = {
+		username: false,
+		password: false,
+		branch: false
+	},
+	validationCheck = {
+		username: $('input[name="username_check"]').val(),
+		password: $('input[name="password_check"]').val()	
+	},
+	readyForBuild = true;
+
 	// Init
 	centerContainer();
 	$(window).on('resize', centerContainer);
+	$('#submit-rebuild').on('click', function(e) {
+		e.preventDefault();
+		if (readyForBuild) {
+			$('#formbox').animate({opacity:0.2},500,'ease-in-out');
+			//$('#rebuildLoader').animate({opacity:1,zIndex:0.2},500,'ease-in-out');
+		}
+	});
 
-	var branches = [];
-
-	var validated = {
-		username: false,
-		password: false,
-		branch = false
-	};
-	
-	var validationCheck = {
-		username: $('input[name="username_check"]').val(),
-		password: $('input[name="password_check"]').val()	
-	}
-
+	// Use github api for branches
 	$.ajaxJSONP({
 		url: 'https://api.github.com/repos/'+$('input[name="github_username"]').val()+'/'+$('input[name="github_repository"]').val()+'/branches?callback=?',
 		success: function(res){
@@ -24,13 +31,14 @@ Zepto(function($) {
 				branches.push(res.data[i].name);
 			}
 
+			// Show for when branches has been ajax'ed
+			$('#formbox').animate({opacity:1},500,'ease-in-out');
 			$('.wrapper').animate({opacity:1},500,'ease-in-out');
+
+			var name = '',
+			val = '';
 			
-			
-	
-			var name = '';
-			var val = '';
-			
+			// Validate when input change
 			$('input').on('keydown paste input', function(e){
 				if (val != e.target.value || name != e.target.name) {
 					val = e.target.value;
@@ -59,18 +67,18 @@ Zepto(function($) {
 
 		validated[name] = inputValidated;
 		
-		// TO-DO: not working
-		console.log(validated);
-		
-		var readyForBuild = true;
-		for (i in validated) {
+		// If all input is validated
+		var allValidated = true;
+		for (var i in validated) {
 			if (!validated[i]) {
-				readyForBuild = false;
+				allValidated = false;
 			}	
 		}
+		readyForBuild = allValidated;
 
 		if (readyForBuild) {
 			$('#submit-rebuild').removeClass('disabled');
+			
 		} else {
 			$('#submit-rebuild').addClass('disabled');
 		}
@@ -83,7 +91,7 @@ Zepto(function($) {
 		if (marginTop < 0) {
 			marginTop = 0;
 		}
-		$('#container').css({'margin-top': marginTop});
+		$('#formbox').css({'padding-top': marginTop});
 	}
 
 });
