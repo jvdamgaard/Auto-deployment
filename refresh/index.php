@@ -34,8 +34,6 @@
 		</div>
 
         <script src="refresh/js/vendor/zepto.min.js"></script>
-        <script src="refresh/js/helper.js"></script>
         <script src="refresh/js/main.js"></script>
-        <script src="refresh/js/plugins.js"></script>
     </body>
 </html>
