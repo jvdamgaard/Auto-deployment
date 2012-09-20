@@ -6,17 +6,16 @@ Zepto(function($) {
 
 	var branches = [];
 
-	var validated = [];
-	validated.username = 'false';
-	validated.password = 'false';
-	validated.branch = 'false';
+	var validated = {
+		username: false,
+		password: false,
+		branch = false
+	};
 	
-	var validationCheck = [];
-	validationCheck.username = $('input[name="username_check"]').val();
-	validationCheck.password = $('input[name="password_check"]').val();
-	
-	var name = '';
-	var val = '';
+	var validationCheck = {
+		username: $('input[name="username_check"]').val(),
+		password: $('input[name="password_check"]').val()	
+	}
 
 	$.ajaxJSONP({
 		url: 'https://api.github.com/repos/'+$('input[name="github_username"]').val()+'/'+$('input[name="github_repository"]').val()+'/branches?callback=?',
@@ -27,17 +26,22 @@ Zepto(function($) {
 
 			$('.wrapper').animate({opacity:1},500,'ease-in-out');
 			
+			
+	
+			var name = '';
+			var val = '';
+			
 			$('input').on('keydown paste input', function(e){
 				if (val != e.target.value || name != e.target.name) {
 					val = e.target.value;
 					name = e.target.name;
-					validate();
+					validate(val, name);
 				}
 			});
 		}
 	});
 
-	function validate() {
+	function validate(val, name) {
 
 		var inputValidated = false;
 
@@ -53,12 +57,19 @@ Zepto(function($) {
 			$('#'+name).removeClass('validated');
 		}
 
-		validated[name] = ''+inputValidated;
+		validated[name] = inputValidated;
 		
 		// TO-DO: not working
 		console.log(validated);
+		
+		var readyForBuild = true;
+		for (i in validated) {
+			if (!validated[i]) {
+				readyForBuild = false;
+			}	
+		}
 
-		if ($.inArray('false',validated) !== -1) {
+		if (readyForBuild) {
 			$('#submit-rebuild').removeClass('disabled');
 		} else {
 			$('#submit-rebuild').addClass('disabled');
