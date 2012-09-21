@@ -20,9 +20,9 @@
 			<div id="formbox">
        			<div id="container">
            			<form>
-               			<p id="username"><input type="text" name="username" placeholder="Username" autofocus="autofocus"></p>
-               			<p id="password"><input type="password" name="password" placeholder="Password"></p>
-               			<p id="branch"><input type="text" name="branch" placeholder="Branch"></p>
+               			<p id="username"><input type="text" name="username" placeholder="Username" autofocus="autofocus" autocapitalize="off" autocorrect="off"></p>
+               			<p id="password"><input type="password" name="password" placeholder="Password" autocapitalize="off" autocorrect="off"></p>
+               			<p id="branch"><input type="text" name="branch" placeholder="Branch" autocapitalize="off" autocorrect="off"></p>
                			<p><a href="#" class="btn disabled" id="submit-rebuild">Rebuild site</a></p>
                			<input type="hidden" name="rebuild" value="true">
 						<input type="hidden" name="username_check" value="<?php echo $user['username'];?>">
