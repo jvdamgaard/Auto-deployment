@@ -11,6 +11,7 @@ Zepto(function($) {
 		password: $('input[name="password_check"]').val()	
 	},
 	readyForBuild = true;
+	inputFieldIds = ['#username','#password','#branch'];
 
 	// Init
 	centerContainer();
@@ -39,7 +40,7 @@ Zepto(function($) {
 			val = '';
 			
 			// Validate when input change
-			$('input').on('keydown paste input', function(e){
+			$(inputFieldIds.join(',')).on('keydown paste input', function(e){
 				if (val != e.target.value || name != e.target.name) {
 					val = e.target.value;
 					name = e.target.name;
