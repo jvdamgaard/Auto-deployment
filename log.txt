@@ -1,5 +1,17 @@
-23.09.2012 @ 13:08:30 - ERROR - Attempt to make a deploy from a not allowed branch: 
-23.09.2012 @ 17:27:35 - ERROR - Attempt to make a deploy from a not allowed branch: 
-23.09.2012 @ 17:30:11 - DEBUG - ref: 
-23.09.2012 @ 17:30:11 - DEBUG - branch: 
-23.09.2012 @ 17:30:11 - ERROR - Attempt to make a deploy from a not allowed branch: 
+23.09.2012 @ 20:00:56 - DEBUG - ref: refs/heads/master
+23.09.2012 @ 20:00:56 - DEBUG - branch: master
+23.09.2012 @ 20:06:34 - DEBUG - ref: refs/heads/development
+23.09.2012 @ 20:06:34 - DEBUG - branch: development
+23.09.2012 @ 20:06:34 - ERROR - Attempt to make a deploy from a not allowed branch: development
+23.09.2012 @ 20:18:25 - DEBUG - ref: refs/heads/feature-test
+23.09.2012 @ 20:18:25 - DEBUG - branch: feature-test
+23.09.2012 @ 20:18:25 - ERROR - Attempt to make a deploy from a not allowed branch: feature-test
+23.09.2012 @ 20:19:36 - DEBUG - ref: refs/heads/feature-test
+23.09.2012 @ 20:19:36 - DEBUG - branch: feature-test
+23.09.2012 @ 20:19:36 - ERROR - Attempt to make a deploy from a not allowed branch: feature-test
+23.09.2012 @ 20:24:59 - DEBUG - ref: refs/heads/feature-test
+23.09.2012 @ 20:24:59 - DEBUG - branch: feature-test
+23.09.2012 @ 20:24:59 - ERROR - Attempt to make a deploy from a not allowed branch: feature-test
+23.09.2012 @ 20:26:18 - DEBUG - ref: refs/heads/feature-test
+23.09.2012 @ 20:26:18 - DEBUG - branch: feature-test
+23.09.2012 @ 20:26:18 - ERROR - Attempt to make a deploy from a not allowed branch: feature-test

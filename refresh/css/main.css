@@ -163,19 +163,16 @@ p {
     -webkit-border-radius: 1px 0px 0px 1px;
     border-radius: 1px 0px 0px 1px;
 }
-.validated:before, #branch:before {
+.validated:before {
     background: rgba(0,255,0,0.4) !important;
 }
-input, select {
+input {
     width: 260px;
     padding: 10px 20px;
     -webkit-border-radius: 2px;
     border-radius: 2px;
     border: 1px solid #ccc;
     height: 44px;
-}
-select {
-    padding-right: 8px;
 }
 .btn{
     display:block;

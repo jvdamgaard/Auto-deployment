@@ -4,9 +4,11 @@ MBP.preventZoom();
 
 Zepto(function($) {
 
-	var	validated = {
+	var	branches = [],
+		validated = {
 			username: false,
-			password: false },
+			password: false,
+			branch: false },
 		validationCheck = {
 			username: $('input[name="username_check"]').val(),
 			password: $('input[name="password_check"]').val() },
@@ -20,7 +22,7 @@ Zepto(function($) {
 		if (readyForBuild) {
 			$('#submit-rebuild').addClass('active');
 			$('#formbox').animate({opacity:0.2},500,'ease-in-out');
-			deploy( $('#branch select').val() );
+			deploy( $('#branch input').val() );
 			// Build site
 		}
 	});
@@ -30,8 +32,7 @@ Zepto(function($) {
 		url: 'https://api.github.com/repos/'+$('input[name="github_username"]').val()+'/'+$('input[name="github_repository"]').val()+'/branches?callback=?',
 		success: function(res){
 			for (var i in res.data) {
-				// branches.push(res.data[i].name);
-				$('#branch select').append('<option value="'+res.data[i].name+'">'+res.data[i].name+'</option>');
+				branches.push(res.data[i].name);
 			}
 
 			// Show for when branches has been ajax'ed
@@ -42,7 +43,7 @@ Zepto(function($) {
 				val = '';
 			
 			// Validate when input change
-			$('input[name="username"], input[name="password"]').on('keydown paste input', function(e){
+			$('input[name="username"], input[name="password"], input[name="branch"]').on('keydown paste input', function(e){
 				if (val != e.target.value || name != e.target.name) {
 					val = e.target.value;
 					name = e.target.name;
@@ -54,7 +55,11 @@ Zepto(function($) {
 
 	function validate(val, name) {
 
-		validated[name] = (md5(val) == validationCheck[name]);
+		if (name == 'username' || name == 'password') { 	
+			validated[name] = (md5(val) == validationCheck[name]);
+		} else if (name == 'branch') {
+			validated[name] = ($.inArray(val,branches) !== -1);
+		}
 
 		if (validated[name]) {
 			$('#'+name).addClass('validated');
@@ -63,7 +68,7 @@ Zepto(function($) {
 		}
 		
 		// If all input is validated
-		readyForBuild = (validated.username && validated.password);
+		readyForBuild = (validated.username && validated.password && validated.branch);
 
 		if (readyForBuild) {
 			$('#submit-rebuild').removeClass('disabled');
@@ -95,7 +100,7 @@ Zepto(function($) {
 				}
 			},
 			error: function(xhr, type){
-				errorOnDeploy();
+				errorOnDeploy(xhr, type);
 			}
 		});
 	}
@@ -107,7 +112,7 @@ Zepto(function($) {
 				createPayload(res.data.tree, branch);
 			},
 			error: function(xhr, type){
-				errorOnDeploy();
+				errorOnDeploy(xhr, type);
 			}
 		});
 	}
@@ -115,7 +120,7 @@ Zepto(function($) {
 	function createPayload(files, branch) {
 		var payload = '{';
 		
-		payload += 'ref: refs/heads/'+branch+', ';
+		payload += '"ref": "refs/heads/'+branch+'", ';
 		
 		var added = [];
 		for (var i in files) {
@@ -123,10 +128,9 @@ Zepto(function($) {
 				added.push(files[i].path);
 			}
 		}
-		payload += 'commits: [{added: ["'+added.join('","')+'"],modified: []}]';
+		payload += '"commits": [{"added": ["'+added.join('","')+'"],"modified": [],"removed": []}]';
 		
 		payload += '}';
-		console.log(payload);
 		callAutoDeploy(payload);
 	}
 
@@ -135,17 +139,27 @@ Zepto(function($) {
 			type: 'POST',
 			data: { payload: deployPayload },
 			success: function(data){
+
 				// Succes
-				console.log('Succes');
+				if (data == 'succes') {
+					console.log("succes");
+
+				// Error	
+				} else {
+					console.log('Error!');
+					console.log(data);
+				}
 			},
 			error: function(xhr, type){
-				errorOnDeploy();
+				errorOnDeploy(xhr, type);
 			}
 		});
 	}
 
-	function errorOnDeploy() {
-		console.log('Error');
+	function errorOnDeploy(xhr, type) {
+		console.log('Error!');
+		console.log(type);
+		console.log(xhr);
 	}
 
 });
