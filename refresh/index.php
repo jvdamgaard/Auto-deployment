@@ -23,6 +23,7 @@
 			<div id="formbox">
        			<div id="container">
            			<form>
+						<p id="message">Deploy failed</p>
                			<p id="username"><input type="text" name="username" id="username_input" placeholder="Username" autofocus="autofocus" autocapitalize="off" autocorrect="off"></p>
                			<p id="password"><input type="password" name="password" id="password_input" placeholder="Password" autocapitalize="off" autocorrect="off"></p>
                			<p id="branch"><input type="text" name="branch" id="branch_input" placeholder="Branch" autocapitalize="off" autocorrect="off"></p>

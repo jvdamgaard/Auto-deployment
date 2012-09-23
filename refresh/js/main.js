@@ -23,7 +23,6 @@ Zepto(function($) {
 			$('#submit-rebuild').addClass('active');
 			$('#formbox').animate({opacity:0.2},500,'ease-in-out');
 			deploy( $('#branch input').val() );
-			// Build site
 		}
 	});
 
@@ -44,6 +43,9 @@ Zepto(function($) {
 			
 			// Validate when input change
 			$('input[name="username"], input[name="password"], input[name="branch"]').on('keydown paste input', function(e){
+				
+				$('#message').hide();
+				
 				if (val != e.target.value || name != e.target.name) {
 					val = e.target.value;
 					name = e.target.name;
@@ -131,10 +133,10 @@ Zepto(function($) {
 		payload += '"commits": [{"added": ["'+added.join('","')+'"],"modified": [],"removed": []}]';
 		
 		payload += '}';
-		callAutoDeploy(payload);
+		callAutoDeploy(payload, branch);
 	}
 
-	function callAutoDeploy(deployPayload) {
+	function callAutoDeploy(deployPayload, branch) {
 		$.ajax({
 			type: 'POST',
 			data: { payload: deployPayload },
@@ -142,12 +144,18 @@ Zepto(function($) {
 
 				// Succes
 				if (data == 'succes') {
-					console.log("succes");
+					$('#submit-rebuild').removeClass('active');
+					$('#formbox').animate({opacity:1},500,'ease-in-out');
+					$('#message').html(branch+' deployed').show().addClass('validated');
+					$('#username input, #password input, #branch input').val('');
+					validate('', 'username');
+					validate('', 'password');
+					validate('', 'branch');
 
 				// Error	
 				} else {
-					console.log('Error!');
-					console.log(data);
+					$('#formbox').animate({opacity:1},500,'ease-in-out');
+					$('#message').html(data).show().removeClass('validated');
 				}
 			},
 			error: function(xhr, type){
@@ -157,9 +165,7 @@ Zepto(function($) {
 	}
 
 	function errorOnDeploy(xhr, type) {
-		console.log('Error!');
-		console.log(type);
-		console.log(xhr);
+		$('#message').val(type).show().removeClass('validated');
 	}
 
 });

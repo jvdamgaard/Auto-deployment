@@ -151,7 +151,7 @@ body {
 p {
   position: relative;
 }
-#username:before, #password:before, #branch:before {
+#username:before, #password:before, #branch:before, #message:before {
     content: '';
     display: block;
     position: absolute;
@@ -166,13 +166,17 @@ p {
 .validated:before {
     background: rgba(0,255,0,0.4) !important;
 }
-input {
+input, #message {
     width: 260px;
     padding: 10px 20px;
     -webkit-border-radius: 2px;
     border-radius: 2px;
     border: 1px solid #ccc;
     height: 44px;
+}
+#message {
+	border: none;
+	display: none;
 }
 .btn{
     display:block;
