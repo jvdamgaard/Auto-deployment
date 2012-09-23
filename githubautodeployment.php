@@ -49,7 +49,11 @@ class GitHubAutoDeployment {
     function __construct($settings){
 
         foreach ($settings as $key => $val) {
-            $this->settings[$key] = $val;
+            if ($key == 'ip') {
+                array_push($ips, $val);
+            } else {
+                $this->settings[$key] = $val;
+            }
         }
 
         $this->compressor = new YUICompressor(        // css compresssor

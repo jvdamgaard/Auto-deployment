@@ -25,7 +25,8 @@ $settings =	array(
                          'release-*' => dirname(dirname(dirname(__FILE__))).'/test-m.adaptivedesignstudio.com',
                          'hotfix-*' => dirname(dirname(dirname(__FILE__))).'/test-m.adaptivedesignstudio.com',
                          'develop' => dirname(dirname(dirname(__FILE__))).'/dev-m.adaptivedesignstudio.com'
-                     )
+                     ),
+                 'ip' => '86.52.85.72'
              );
 
 // used to login for refresh build
@@ -45,11 +46,6 @@ if(isset($_POST['payload']) && !empty($_POST['payload'])) {
 						$settings
 					)
 				);
-				
-// Rebuild site 				
-} elseif (  ( $_POST['rebuild'] == 'true') &&
-            ( md5($_POST['usernmae']) == $user['username'] ) &&
-            ( md5($_POST['password']) == $user['password'] ) ) {
 
 // Show web interface	
 } else {
