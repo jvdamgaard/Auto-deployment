@@ -1,4 +1,5 @@
-22.09.2012 @ 23:50:49 - ERROR - Attempt to make a deploy from a not allowed IP: 86.52.85.72
-22.09.2012 @ 23:52:45 - ERROR - Attempt to make a deploy from a not allowed IP: 86.52.85.72
-22.09.2012 @ 23:56:21 - ERROR - Attempt to make a deploy from a not allowed IP: 86.52.85.72
-22.09.2012 @ 23:59:17 - ERROR - Attempt to make a deploy from a not allowed IP: 86.52.85.72
+23.09.2012 @ 13:08:30 - ERROR - Attempt to make a deploy from a not allowed branch: 
+23.09.2012 @ 17:27:35 - ERROR - Attempt to make a deploy from a not allowed branch: 
+23.09.2012 @ 17:30:11 - DEBUG - ref: 
+23.09.2012 @ 17:30:11 - DEBUG - branch: 
+23.09.2012 @ 17:30:11 - ERROR - Attempt to make a deploy from a not allowed branch: 

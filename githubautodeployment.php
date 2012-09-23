@@ -63,7 +63,7 @@ class GitHubAutoDeployment {
 
         // check that we have rights to deploy - IP check
         if (!in_array($_SERVER['REMOTE_ADDR'], $this->ips)) {
-            GitHubAutoDeployment::log('error', 'Attempt to make a deploy from a not allowed IP: ' . $_SERVER['REMOTE_ADDR'], true);
+            //GitHubAutoDeployment::log('error', 'Attempt to make a deploy from a not allowed IP: ' . $_SERVER['REMOTE_ADDR'], true);
         }
 
         // We received json object - decode it
@@ -71,6 +71,7 @@ class GitHubAutoDeployment {
 
         // If branch is not specified
         if(!$this->testBranch()) {
+			GitHubAutoDeployment::log('error', 'Attempt to make a deploy from a not allowed branch: ' . $this->branch, true);
             die;
         }
 
@@ -81,8 +82,9 @@ class GitHubAutoDeployment {
         if(!isset($this->settings['branches']) || empty($this->settings['branches'])) {
             return false;
         }
-
+		GitHubAutoDeployment::log('debug', 'ref: ' . $this->data->ref);
         $this->branch = substr(strrchr($this->data->ref,"/"),1);
+		GitHubAutoDeployment::log('debug', 'branch: ' . $this->branch);
 
         // Is equal to
         if (array_key_exists($this->branch, $this->settings['branches'])) {

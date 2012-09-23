@@ -63,7 +63,7 @@ Zepto(function($) {
 		}
 		
 		// If all input is validated
-		readyForBuild = (validated['username'] && validated['password']);
+		readyForBuild = (validated.username && validated.password);
 
 		if (readyForBuild) {
 			$('#submit-rebuild').removeClass('disabled');
@@ -89,51 +89,58 @@ Zepto(function($) {
 			success: function(res){
 				for (var i in res.data) {
 					if (res.data[i].name == deployBranch) {
-						getTree(res.data[i].commit.sha);
+						getTree(res.data[i].commit.sha, deployBranch);
 						break;
 					}
 				}
 			},
 			error: function(xhr, type){
-			    errorOnDeploy();
+				errorOnDeploy();
 			}
 		});
 	}
 
-	function getTree(sha) {
+	function getTree(sha, branch) {
 		$.ajaxJSONP({
 			url: 'https://api.github.com/repos/'+$('input[name="github_username"]').val()+'/'+$('input[name="github_repository"]').val()+'/git/trees/'+sha+'?recursive=1&callback=?',
 			success: function(res){
-				createPayload(res.data.tree);
+				createPayload(res.data.tree, branch);
 			},
 			error: function(xhr, type){
-			    errorOnDeploy();
+				errorOnDeploy();
 			}
 		});
 	}
 
-	function createPayload(files) {
+	function createPayload(files, branch) {
+		var payload = '{';
+		
+		payload += 'ref: refs/heads/'+branch+', ';
+		
 		var added = [];
 		for (var i in files) {
 			if (files[i].type == 'blob') {
 				added.push(files[i].path);
 			}
 		}
-		var payload = '{commits: [{added: ["'+added.join('","')+'"],modified: []}]}';
+		payload += 'commits: [{added: ["'+added.join('","')+'"],modified: []}]';
+		
+		payload += '}';
+		console.log(payload);
 		callAutoDeploy(payload);
 	}
 
 	function callAutoDeploy(deployPayload) {
 		$.ajax({
 			type: 'POST',
-		  	data: { payload: deployPayload },
-		  	success: function(data){
-		  		// Succes
-		  		console.log('Succes');
-		  	},
-		  		error: function(xhr, type){
-		  		errorOnDeploy();
-		  	}
+			data: { payload: deployPayload },
+			success: function(data){
+				// Succes
+				console.log('Succes');
+			},
+			error: function(xhr, type){
+				errorOnDeploy();
+			}
 		});
 	}
 
