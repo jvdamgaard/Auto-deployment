@@ -11,7 +11,7 @@
  *      x minify js and css with YUI compressor
  *      - minify html
  *      - minify images
- *      - refresh build option
+ *      x refresh build option
  *		- for private repositories	
  *		- receive e-mail on deployment
  *		- auto-update
