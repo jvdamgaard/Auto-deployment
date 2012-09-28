@@ -139,6 +139,7 @@ class GitHubAutoDeployment {
                 if (!$this->excludeFile($filename)) {
                     if (!$this->addFile($filename)) {
                         GitHubAutoDeployment::log('error', 'Error while trying to upload file: ' . setCorrectFilePath($filename));
+						$this->emailLog .= "\n".date('d.m.Y @ H:i:s').": !!! ERROR !!! added \t".$this->setCorrectFilePath($filename);
                         $errors = true;
                     } else {
 						$this->emailLog .= "\n".date('d.m.Y @ H:i:s').": added \t".$this->setCorrectFilePath($filename);
@@ -150,6 +151,7 @@ class GitHubAutoDeployment {
                 if (!$this->excludeFile($filename)) {
                     if (!$this->removeFile($filename)) {
                         GitHubAutoDeployment::log('error', 'Error while trying to remove file: ' . setCorrectFilePath($filename));
+						$this->emailLog .= "\n".date('d.m.Y @ H:i:s').": !!! ERROR !!! removed: \t".$this->setCorrectFilePath($filename);
                         $errors = true;
                     } else {
 						$this->emailLog .= "\n".date('d.m.Y @ H:i:s').": removed: \t".$this->setCorrectFilePath($filename);
@@ -164,9 +166,13 @@ class GitHubAutoDeployment {
 			$timeSpent = round(($endTime-$this->startTime)*100)/100;
 			$this->emailLog .= "\n\n".date('d.m.Y @ H:i:s',$endTime).": Deploy ended";
 			$this->emailLog .= "\nDeployed in ".$timeSpent." seconds";
-			
 			$this->sendMail();
-        }
+        } else {	
+            GitHubAutoDeployment::log('deployment', 'Deployment failed');
+			$this->emailLog .= "\n\n".date('d.m.Y @ H:i:s',$endTime).": !!! DEPLOY FAILED !!!";
+			$this->sendMail();
+	
+		}
     }
 
     protected function addFile($file) {
@@ -260,6 +266,8 @@ class GitHubAutoDeployment {
 
         if ($die) {
             print($message);
+			$this->emailLog .= "\n\n".$message;
+			$this-semdMail();
             die;
         }
     }
