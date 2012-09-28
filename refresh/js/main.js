@@ -136,7 +136,7 @@ Zepto(function($) {
 			success: function(data){
 
 				// Succes
-				if (data == 'succes') {
+				if (data === 'succes') {
 					$('#submit-rebuild').removeClass('active');
 					$('#formbox').animate({opacity:1},500,'ease-in-out');
 					$('#message').html(branch+' deployed').show().addClass('validated');

@@ -23,7 +23,8 @@ class GitHubAutoDeployment {
                                 'excludeDirs' => array(      // list of folders you want to exclude from a deploy
                                     
                                 ),
-		                        'folder' => 'publish'
+		                        'folder' => 'publish',
+								'email' => ''
                             );
 
     public  $files          = array();                  // list of files to process on a server
@@ -32,11 +33,15 @@ class GitHubAutoDeployment {
                                 '50.57.128.197',
                                 '108.171.174.178'
                             );
+	public $emailLog		= '';
+	public $startTime		= null;
 
     /**
      *  Now time for a deploy - get the POST data
      */
     function __construct($settings){
+	
+		$this->startTime = time();
 
         foreach ($settings as $key => $val) {
             if ($key == 'ip') {
@@ -46,6 +51,9 @@ class GitHubAutoDeployment {
             }
         }
 
+		$this->emailLog .= "Deploy from ".$this->settings['repository']." by ".$this->settings['username'];
+		$this->emailLog .= "\n".date('d.m.Y @ H:i:s', $this->startTime).": Deploy startet\n";
+
         // check that we have rights to deploy - IP check
         if (!in_array($_SERVER['REMOTE_ADDR'], $this->ips)) {
             GitHubAutoDeployment::log('error', 'Not allowed IP: ' . $_SERVER['REMOTE_ADDR'], true);
@@ -53,11 +61,14 @@ class GitHubAutoDeployment {
 
         // We received json object - decode it
         $this->data = json_decode(stripslashes($this->settings['payload']));
+		$this->emailLog .= "\n".date('d.m.Y @ H:i:s').": Payload decoded";
 
         // If branch is not specified
         if(!$this->testBranch()) {
 			GitHubAutoDeployment::log('error', 'Not allowed branch', true);
         }
+		$this->emailLog .= "\n".date('d.m.Y @ H:i:s').": Branch approved - ".$this->branch;
+		$this->emailLog .= "\n".date('d.m.Y @ H:i:s').": Branch dir - ".$this->branchPath;
 
 		$this->deploy();
     }
@@ -120,51 +131,73 @@ class GitHubAutoDeployment {
 
         // get the list of all files we need to upload
         foreach($this->data->commits as $commit){
+	
+			$this->emailLog .= "\n";
             $add = array_merge($commit->added,$commit->modified);
 
             foreach($add as $filename) {
                 if (!$this->excludeFile($filename)) {
                     if (!$this->addFile($filename)) {
-                        GitHubAutoDeployment::log('error', 'Error while trying to upload file: ' . $filename);
+                        GitHubAutoDeployment::log('error', 'Error while trying to upload file: ' . setCorrectFilePath($filename));
                         $errors = true;
-                    }
+                    } else {
+						$this->emailLog .= "\n".date('d.m.Y @ H:i:s').": added \t".$this->setCorrectFilePath($filename);
+					}
                 }
             }
 
             foreach($commit->removed as $filename) {
                 if (!$this->excludeFile($filename)) {
                     if (!$this->removeFile($filename)) {
-                        GitHubAutoDeployment::log('error', 'Error while trying to remove file: ' . $filename);
+                        GitHubAutoDeployment::log('error', 'Error while trying to remove file: ' . setCorrectFilePath($filename));
                         $errors = true;
-                    }
+                    } else {
+						$this->emailLog .= "\n".date('d.m.Y @ H:i:s').": removed: \t".$this->setCorrectFilePath($filename);
+					}
                 }
             }
         }
         if (!$errors) {
             print('succes');
             GitHubAutoDeployment::log('deployment', 'All systems go!');
+			$endTime = time();
+			$timeSpent = round(($endTime-$this->startTime)*100)/100;
+			$this->emailLog .= "\n\n".date('d.m.Y @ H:i:s',$endTime).": Deploy ended";
+			$this->emailLog .= "\nDeployed in ".$timeSpent." seconds";
+			
+			$this->sendMail();
         }
     }
 
     protected function addFile($file) {
 
             $url  = 'https://raw.github.com/' . $this->settings['username'] . '/' . $this->settings['repository'] . '/' . $this->branch . '/' . $file;
+			$file = $this->setCorrectFilePath($file);
             $path = $this->settings['branches'][$this->branch] . '/' . $file;
             $this->createDir($path);
 
-            $content = file_get_contents($url);
+            $content = @file_get_contents($url);
 
             // upload
-            return file_put_contents($path, $content);
+            return @file_put_contents($path, $content);
     }
 
     protected function removeFile($file) {
-
+			
+			$file = $this->setCorrectFilePath($file);
             $path = $this->settings['branches'][$this->branch] . '/' . $file;
 
             // delete
-            return unlink($path);
+            return @unlink($path);
     }
+
+	protected function setCorrectFilePath($file) {
+		// check folder
+		if ($this->settings['folder'] != '') {
+			$file = substr($file,strlen($this->settings['folder'])+1);
+		}
+		return $file;
+	}
 
     /**
      *  Check that current file is not in an exlcude list
@@ -175,9 +208,9 @@ class GitHubAutoDeployment {
         $file_info = pathinfo($file);
 
 		// check folder
-		if ($folder != '') {
-			if (strpos($this->settings['folder'], $file_info['dirname'], 0) !== 0) {
-				return false;
+		if ($this->settings['folder'] != '') {
+			if (strpos($file_info['dirname'], $this->settings['folder'], 0) !== 0) {
+				return true;
 			}
 		}
 
@@ -243,6 +276,16 @@ class GitHubAutoDeployment {
         if (!mkdir($path, 0755, true)) {
             GitHubAutoDeployment::log('error', 'Failed to create folders: ' . $path, true);
         }
+    }
+
+	/**
+     *  Send email with log
+     */
+    protected function sendMail(){
+        $to = $this->settings['email'];
+		$subject = "Deploy";
+		$body = $this->emailLog;
+		mail($to, $subject, $body);
     }
 
 }

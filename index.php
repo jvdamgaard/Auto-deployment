@@ -15,6 +15,7 @@
 $settings =	array(
 				'username' => 'jvdamgaard',
 				'repository' => 'm.adaptivedesignstudio.com',
+				'email' => 'jakob_damgaard@hotmail.com',
 				'branches' => array(
 					'master' => dirname(dirname(__FILE__)),
 					'release-*' => dirname(dirname(dirname(__FILE__))).'/test-m.adaptivedesignstudio.com',
