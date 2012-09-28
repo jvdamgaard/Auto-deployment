@@ -1,15 +1,8 @@
 <!DOCTYPE html>
-<!--[if IEMobile 7 ]>    <html class="no-js iem7"> <![endif]-->
-<!--[if (gt IEMobile 7)|!(IEMobile)]><!--> <html class="no-js"> <!--<![endif]-->
+<html class="no-js">
     <head>
         <meta charset="utf-8">
         <title>Deploy site</title>
-        <meta name="description" content="">
-
-        <meta name="HandheldFriendly" content="True">
-        <meta name="MobileOptimized" content="320">
-        <meta name="viewport" content="width=device-width">
-        <meta http-equiv="cleartype" content="on">
 
         <link rel="stylesheet" href="refresh/css/normalize.css">
         <link rel="stylesheet" href="refresh/css/main.css">
