@@ -4,8 +4,8 @@
         <meta charset="utf-8">
         <title>Deploy site</title>
 
-        <link rel="stylesheet" href="refresh/css/normalize.css">
-        <link rel="stylesheet" href="refresh/css/main.css">
+        <link rel="stylesheet/less" type="text/css" href="refresh/less/main.less">
+		<script src="refresh/js/vendor/less-1.3.0.min.js" type="text/javascript"></script>
 
         <link href="http://fonts.googleapis.com/css?family=Open Sans&subset=latin" rel="stylesheet" type="text/css">
 
