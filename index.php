@@ -7,24 +7,23 @@
  *      after each push was made to a repository by any user
  *
  *  TO-DO
- *      x refresh build option
  *		- for private repositories	
  *		- receive e-mail on deployment
  *		- auto-update
- *		- set specific folder. E.g. "publish"
  */
 
 $settings =	array(
-                 'username' => 'jvdamgaard',
-                 'repository' => 'm.adaptivedesignstudio.com',
-                 'branches' => array(
-                         'master' => dirname(dirname(__FILE__)),
-                         'release-*' => dirname(dirname(dirname(__FILE__))).'/test-m.adaptivedesignstudio.com',
-                         'hotfix-*' => dirname(dirname(dirname(__FILE__))).'/test-m.adaptivedesignstudio.com',
-                         'develop' => dirname(dirname(dirname(__FILE__))).'/dev-m.adaptivedesignstudio.com'
-                     ),
-                 'ip' => '86.52.85.72'
-             );
+				'username' => 'jvdamgaard',
+				'repository' => 'm.adaptivedesignstudio.com',
+				'branches' => array(
+					'master' => dirname(dirname(__FILE__)),
+					'release-*' => dirname(dirname(dirname(__FILE__))).'/test-m.adaptivedesignstudio.com',
+					'hotfix-*' => dirname(dirname(dirname(__FILE__))).'/test-m.adaptivedesignstudio.com',
+					'develop' => dirname(dirname(dirname(__FILE__))).'/dev-m.adaptivedesignstudio.com'
+					),
+				'ip' => '86.52.85.72',	
+				'folder' => 'publish' // only deploy files from this subfolder. E.g. used with ant-build-script. Don't include front and end slashes
+			);
 
 // used to login for refresh build
 // use http://md5-hash-online.waraxe.us/ for md5

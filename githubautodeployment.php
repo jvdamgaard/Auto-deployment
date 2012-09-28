@@ -23,7 +23,8 @@ class GitHubAutoDeployment {
                                 ),
                                 'excludeDirs' => array(      // list of folders you want to exclude from a deploy
                                     'less'
-                                )
+                                ),
+		                        'folder' => ''
                             );
 
     public  $files          = array();                  // list of files to process on a server
@@ -173,6 +174,13 @@ class GitHubAutoDeployment {
     protected function excludeFile($file){
 
         $file_info = pathinfo($file);
+
+		// check folder
+		if ($folder != '') {
+			if (strpos($this->settings['folder'], $file_info['dirname'], 0) !== 0) {
+				return false;
+			}
+		}
 
         // check file
         foreach ($this->settings['excludeFiles'] as $ex_file) {
