@@ -3,8 +3,6 @@
  *  Main class itself where all the magic happens
  */
 
-include_once('yuicompressor.php');
-
 class GitHubAutoDeployment {
 
     const   LOG_FILE        = './log.txt';       // where to save all deploy results
@@ -17,11 +15,6 @@ class GitHubAutoDeployment {
                                 'username' => null,		// GitHub username
                                 'repository' => null,	// repository on GitHub
                                 'branches' => null,		// array - key: branch (* could be used alone or in beginnng or end of string); val: absolute path to deploye branch in
-                                'compileLess' => true,
-                                'compressJs' => true,
-                                'compressCss' => true,
-                                'compressHtml' => true,
-                                'compressImages' => true,
                                 'excludeFiles' => array(    // list of files you want to exclude from a deploy
                                     '*.gitattributes',
                                     '*.gitignore',
@@ -39,9 +32,6 @@ class GitHubAutoDeployment {
                                 '50.57.128.197',
                                 '108.171.174.178'
                             );
-    public  
-    public  $cssCompressor  = null;
-    public 	$jsCompressor   = null;
 
     /**
      *  Now time for a deploy - get the POST data
@@ -55,11 +45,6 @@ class GitHubAutoDeployment {
                 $this->settings[$key] = $val;
             }
         }
-
-        $this->compressor = new YUICompressor(        // css compresssor
-                                    dirname(__FILE__).'/yuicompressor-2.4.7.jar',
-                                    dirname(__FILE__).'/tmp'
-                                );
 
         // check that we have rights to deploy - IP check
         if (!in_array($_SERVER['REMOTE_ADDR'], $this->ips)) {
@@ -168,23 +153,6 @@ class GitHubAutoDeployment {
             $this->createDir($path);
 
             $content = file_get_contents($url);
-
-            /*// Compress js files
-            if ($this->settings['compressJs'] && $this->endsWith($file,'.js')) {
-
-                //debug
-                print('<br>file: '.$file.'<br>');
-                print('before: '.$content.'<br>');
-                $content = $this->compressor->compress($content,'js');
-
-                //debug
-                print('after: '.$content.'<br>');
-            }
-
-            // Compress css files
-            if ($this->settings['compressJs'] && $this->endsWith($file,'.css')) {
-                $content = $this->compressor->compress($content,'css');
-            }*/
 
             // upload
             return file_put_contents($path, $content);

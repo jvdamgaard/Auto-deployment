@@ -7,14 +7,11 @@
  *      after each push was made to a repository by any user
  *
  *  TO-DO
- *      - compile less
- *      x minify js and css with YUI compressor
- *      - minify html
- *      - minify images
  *      x refresh build option
  *		- for private repositories	
  *		- receive e-mail on deployment
  *		- auto-update
+ *		- set specific folder. E.g. "publish"
  */
 
 $settings =	array(

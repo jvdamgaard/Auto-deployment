@@ -1,7 +1,3 @@
-MBP.scaleFix();
-MBP.hideUrlBarOnLoad();
-MBP.preventZoom();
-
 Zepto(function($) {
 
 	var	branches = [],
@@ -57,7 +53,7 @@ Zepto(function($) {
 
 	function validate(val, name) {
 
-		if (name == 'username' || name == 'password') { 	
+		if (name == 'username' || name == 'password') {
 			validated[name] = (md5(val) == validationCheck[name]);
 		} else if (name == 'branch') {
 			validated[name] = ($.inArray(val,branches) !== -1);
