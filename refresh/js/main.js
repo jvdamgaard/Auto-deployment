@@ -7,15 +7,14 @@ Zepto(function($) {
 			branch: false },
 		validationCheck = {
 			username: $('input[name="username_check"]').val(),
-			password: $('input[name="password_check"]').val() },
-		readyForBuild = false;
+			password: $('input[name="password_check"]').val() };
 
 	// Init
 	centerContainer();
 	$(window).on('resize', centerContainer);
 	$('#submit-rebuild').on('click', function(e) {
 		e.preventDefault();
-		if (readyForBuild) {
+		if (validated.username && validated.password && validated.branch) {
 			$('#submit-rebuild').addClass('active');
 			$('#formbox').animate({opacity:0.2},500,'ease-in-out');
 			deploy( $('#branch input').val() );
@@ -66,9 +65,7 @@ Zepto(function($) {
 		}
 		
 		// If all input is validated
-		readyForBuild = (validated.username && validated.password && validated.branch);
-
-		if (readyForBuild) {
+		if (validated.username && validated.password && validated.branch) {
 			$('#submit-rebuild').removeClass('disabled');
 		} else {
 			$('#submit-rebuild').addClass('disabled');
