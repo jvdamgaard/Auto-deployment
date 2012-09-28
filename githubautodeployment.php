@@ -18,13 +18,12 @@ class GitHubAutoDeployment {
                                 'excludeFiles' => array(    // list of files you want to exclude from a deploy
                                     '*.gitattributes',
                                     '*.gitignore',
-                                    '*.md',
-                                    '*.less'
+                                    '*.md'
                                 ),
                                 'excludeDirs' => array(      // list of folders you want to exclude from a deploy
-                                    'less'
+                                    
                                 ),
-		                        'folder' => ''
+		                        'folder' => 'publish'
                             );
 
     public  $files          = array();                  // list of files to process on a server
