@@ -1,16 +1,16 @@
 <?php
-
-/**
+/**	
  *  Github automatic deployment script for php projects
  *
  *  This file will make your project available on a live server several seconds
  *      after each push was made to a repository by any user
  *
  *  TO-DO
- *		- for private repositories	
- *		- receive e-mail on deployment
+ *		- for private repositories
  *		- auto-update
  */
+
+$version = '0.8.0';
 
 $settings =	array(
 				'username' => 'jvdamgaard',
@@ -34,6 +34,13 @@ $user = array(
         );
 
 include_once('githubautodeployment.php');
+include_once('checkforupdate.php');
+
+$versionCheck = new VersionCheck($version);
+
+if (!$versionCheck->isUpToDate()) {
+	echo 'Should be updated';
+}
 
 // Auto deploy form GitHub
 if(isset($_POST['payload']) && !empty($_POST['payload'])) {
